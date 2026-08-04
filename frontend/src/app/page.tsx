@@ -1,9 +1,19 @@
-export default function Home(){
 
+
+export default function Home() {
   return (
-    <main>
-      <h1>InterviewIQ</h1>
-      <p>AI Powered Interview Preperation Platform</p>
-    </main>
+    <>
+     
+
+      <main className="p-8">
+        <h1 className="text-4xl font-bold">
+          InterviewIQ
+        </h1>
+
+        <p className="mt-4">
+          AI Powered Interview Preparation Platform
+        </p>
+      </main>
+    </>
   );
 }
