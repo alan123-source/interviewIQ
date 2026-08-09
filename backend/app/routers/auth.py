@@ -9,6 +9,7 @@ from app.schemas.user import UserLogin
 from app.utils.security import verify_password
 from app.utils.security import hash_password
 from app.utils.security import create_access_token
+from app.core.security import get_current_user
 router=APIRouter(
     prefix="/auth",
     tags=["Authentication"]
@@ -71,4 +72,14 @@ def login_user(
         "message":"Login successfull",
         "access_token":access_token,
         "token_type":"bearer"
+    }
+@router.get("/profile")
+def get_profile(
+    current_user:User=Depends(get_current_user)
+
+):
+    return{
+        "id":current_user.id,
+        "name":current_user.name,
+        "email":current_user.email
     }
