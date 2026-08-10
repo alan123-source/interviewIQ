@@ -1,19 +1,13 @@
-
+import Hero from "@/components/Hero";
+import Features from "@/components/Features";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <>
-     
-
-      <main className="p-8">
-        <h1 className="text-4xl font-bold">
-          InterviewIQ
-        </h1>
-
-        <p className="mt-4">
-          AI Powered Interview Preparation Platform
-        </p>
-      </main>
+      <Hero />
+      <Features />
+      <Footer />
     </>
   );
 }
