@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import {loginUser} from "@/services/auth.service";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,23 +14,17 @@ export default function LoginPage() {
 
     try{
 
-        const response=await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"Application/json"
-                },
+        const data=await loginUser(email,password);
+        //console.log(data);
 
-                body:JSON.stringify({
-                    email,
-                    password
-                })
-            }
+        localStorage.setItem(
+          "access_token",
+          data.access_token
         );
 
-        const data=await response.json();
-        console.log(data);
+        console.log("login successfull");
+        setEmail("");
+        setPassword("");
 
     }catch(error){
         console.log(error);
