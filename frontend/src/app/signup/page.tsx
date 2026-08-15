@@ -1,5 +1,7 @@
 "use client";
 import {useState} from "react";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 export default function SignupPage(){
 
     const [name,setName]=useState("");
@@ -36,18 +38,22 @@ export default function SignupPage(){
 
         if (!response.ok){
 
-            setMessage(
-                "Please fill all fields correctly"
-            );
-
-            return;
+            if(typeof data.detail==="string"){
+                setMessage(data.detail);
+            }else{
+                setMessage("Please fill all fields correctly");
+            }
             
         }
+        if (response.ok){
 
         setMessage("Account Created successfully");
         setName("");
         setEmail("");
         setPassword("");
+
+        }
+        
     }catch(error){
         setMessage(
             "unable to connect to server"
@@ -65,40 +71,40 @@ export default function SignupPage(){
             <form 
             onSubmit={handleSubmit}
             className="mt-6 space-y-4 max-w-md">
-                <input 
+                <Input 
                    type="text"
                    placeholder="Name"
                    value={name}
                    onChange={(e) => setName(e.target.value)}
-                   className="w-full border p-2 rounded"
+                   
                    
                 />
 
-                <input 
+                <Input 
                    type="email"
                    placeholder="Email"
                    value={email}
                    onChange={(e)=>setEmail(e.target.value)}
-                   className="w-full border p-2 rounded"
+                   
                 />
 
-                <input 
+                <Input 
                   type="password"
                   placeholder="Password"
                   value={password}
                   onChange={(e)=>setPassword(e.target.value)}
-                  className="w-full border p-2 rounded"
+                  
                 />
 
-                <button
+                <Button
                    type="submit"
-                   className="border px-4 py-2 rounded"
+                   
                 >
                     {
 
                         loading?"Creating Account....": "Create Account"
                     }
-                </button>
+                </Button>
 
                 {
                     message&&(

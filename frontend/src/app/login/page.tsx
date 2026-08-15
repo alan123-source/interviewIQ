@@ -2,15 +2,21 @@
 
 import { useState } from "react";
 import {loginUser} from "@/services/auth.service";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message,setMessage]=useState("");
 
   const handleSubmit=async(
     e:React.FormEvent<HTMLFormElement>
     
   )=>{
     e.preventDefault();
+
+    
 
     try{
 
@@ -22,12 +28,17 @@ export default function LoginPage() {
           data.access_token
         );
 
-        console.log("login successfull");
+        setMessage("login successfull");
         setEmail("");
         setPassword("");
 
     }catch(error){
-        console.log(error);
+        if (error instanceof Error){
+
+          setMessage(error.message);
+        }else{
+          setMessage("Something went wrong");
+        }
     }
   }
 
@@ -40,28 +51,33 @@ export default function LoginPage() {
       <form 
        onSubmit={handleSubmit}
       className="mt-6 space-y-4 max-w-md">
-        <input
+        <Input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border p-2 rounded"
+          
         />
 
-        <input
+        <Input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full border p-2 rounded"
+          
         />
-
-        <button
-          type="submit"
-          className="border px-4 py-2 rounded"
+        <Button
+         type="submit"
         >
           Login
-        </button>
+        </Button>
+        {
+          message &&(
+            <p className="mt-4">
+              {message}
+            </p>
+          )
+        }
       </form>
     </main>
   );

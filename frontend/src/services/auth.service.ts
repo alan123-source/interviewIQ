@@ -4,6 +4,12 @@ export async function loginUser(
     email:string,
     password:string
 ){
+
+    if (!email||!password){
+        
+        throw new Error("Please fill all fields");
+
+    }
     const response=await fetch(
         `${API_URL}/auth/login`,
         {
