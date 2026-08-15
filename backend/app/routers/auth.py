@@ -1,5 +1,5 @@
-from fastapi import APIRouter
-from fastapi import Depends
+
+from fastapi import Depends,HTTPException,status,APIRouter
 from sqlalchemy.orm import Session
 
 from app.database.dependencies import get_db
@@ -27,9 +27,10 @@ def register_user(
     )
 
     if existing_user:
-        return{
-            "message":"Email already exists"
-        }
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already exists"
+        )
 
     new_user=User(
         name=user.name,
@@ -55,16 +56,18 @@ def login_user(
     )
 
     if not existing_user:
-        return{
-            "message":"User not found"
-        }
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password"
+        )
     if not verify_password(
         user.password,
         existing_user.password
     ):
-        return{
-            "message":"Invalid Password"
-        }
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password"
+        )
     access_token=create_access_token(
         str(existing_user.id)
     )
