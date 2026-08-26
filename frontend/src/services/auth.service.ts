@@ -53,6 +53,11 @@ export async function getProfile(){
 
     const data=await response.json();
 
+    if (response.status==401){
+        localStorage.removeItem("access_token");
+        throw new Error("Not authenticated");
+    }
+
     if(!response.ok){
         throw new Error(
             data.detail||"unable to fetch profile"
