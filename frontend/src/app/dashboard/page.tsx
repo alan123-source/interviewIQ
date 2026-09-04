@@ -3,8 +3,11 @@ import {useState,useEffect} from "react";
 import {useRouter} from "next/navigation";
 
 import {getProfile,logoutUser} from "@/services/auth.service";
+import {getResumes} from "@/services/resume.service";
 import {Card,CardContent,CardHeader,CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
+import type {Resume} from "@/types/resume";
+import ResumeCard from "@/components/ResumeCard";
 
 type User={
     id:number;
@@ -18,13 +21,21 @@ export default function DashboardPage(){
 
     const [user,setUser]=useState<User |null>(null);
 
+    const [resumes,setResumes]=useState<Resume[]>([]);
+
     const [loading,setLoading]=useState(true);
 
     useEffect(()=>{
         
-        getProfile()
-        .then((data)=>{
-            setUser(data);
+        Promise.all([
+          getProfile(),
+          getResumes()
+        ])
+        .then(([userData,resumeData])=>{
+
+          setUser(userData);
+          setResumes(resumeData)
+
         })
         .catch(()=>{
             localStorage.removeItem("access_token");
@@ -43,6 +54,16 @@ export default function DashboardPage(){
 
     if (!user){
         return null;
+    }
+
+    //handle resume delete
+
+    const handleResumeDelete=(resumeId:number)=>{
+      setResumes((currentResumes)=>
+         currentResumes.filter(
+          (resume)=>resume.id!==resumeId
+         )
+      )
     }
     return (
   <main className="p-10">
@@ -104,6 +125,38 @@ export default function DashboardPage(){
           <p className="text-muted-foreground">
             No interview activity yet.
           </p>
+        </CardContent>
+      </Card>
+    </div>
+
+    <div className="mt-8">
+      <Card>
+        <CardHeader>
+            <CardTitle>My Resumes</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          {
+            resumes.length===0?(
+              <p className="text-muted-foreground">
+                No resumes uploaded yet
+              </p>
+            ):(
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {
+                  resumes.map((resume)=>(
+                    <ResumeCard 
+                      key={resume.id}
+                      resume={resume}
+                      onDelete={handleResumeDelete}
+                    />
+                  ))
+                }
+              </div>
+
+            )
+          }
         </CardContent>
       </Card>
     </div>

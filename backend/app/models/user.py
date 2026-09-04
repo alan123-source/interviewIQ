@@ -2,6 +2,8 @@ from sqlalchemy import Column,Integer,String,DateTime,func,Boolean
 
 from app.database.db import Base
 
+from sqlalchemy.orm import relationship
+
 class User(Base):
     __tablename__="users"
     id=Column(Integer,primary_key=True,index=True)
@@ -37,4 +39,10 @@ class User(Base):
         server_default=func.now(),
         onupdate=func.now(),
         nullable=True
+    )
+
+    resumes=relationship(
+        "Resume",
+        back_populates="user",
+        cascade="all,delete-orphan"
     )
